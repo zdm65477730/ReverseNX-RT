@@ -250,7 +250,6 @@ public:
 		tsl::hlp::doWithSmSession([&lanPath, &jsonStr]{
 			tsl::tr::InitTrans(lanPath, jsonStr);
 		});
-		fsdevUnmountDevice("sdmc");
 
 		tsl::hlp::doWithSmSession([] {
 			SaltySD = CheckPort();
@@ -277,6 +276,7 @@ public:
 	
 	virtual void exitServices() override {
 		shmemClose(&_sharedmemory);
+		fsdevUnmountDevice("sdmc");
 	}  // Callet at the end to clean up all services previously initialized
 
 	virtual void onShow() override {}    // Called before overlay wants to change from invisible to visible state
