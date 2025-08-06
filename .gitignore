@@ -1,10 +1,10 @@
-
 build/
+SdOut/
+SaltySD/
+atmosphere/
 
 *.ovl
-
 *.elf
-
 *.nacp
-
 *.nro
+*.zip

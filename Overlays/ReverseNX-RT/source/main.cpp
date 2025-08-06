@@ -3,6 +3,8 @@
 #include "SaltyNX.h"
 #include <dirent.h>
 
+using namespace tsl;
+
 bool* def = 0;
 bool* isDocked = 0;
 bool* pluginActive = 0;
@@ -140,12 +142,12 @@ public:
 	virtual tsl::elm::Element* createUI() override {
 		// A OverlayFrame is the base element every overlay consists of. This will draw the default Title and Subtitle.
 		// If you need more information in the header or want to change it's look, use a HeaderOverlayFrame.
-		auto frame = new tsl::elm::OverlayFrame("ReverseNX-RT", _isDocked ? "Change Docked Default Display Resolution" : "Change Handheld Default Display Resolution");
+		auto frame = new tsl::elm::OverlayFrame("PluginName"_tr, _isDocked ? "ChangeDockedDefaultDisplayResolutioResolutionModeMenuOverlayFrameText"_tr : "ChangeHandheldDefaultDisplayResolutioResolutionModeMenuOverlayFrameText"_tr);
 
 		// A list that can contain sub elements and handles scrolling
 		auto list = new tsl::elm::List();
 
-		auto *clickableListItem2 = new tsl::elm::ListItem("Default");
+		auto *clickableListItem2 = new tsl::elm::ListItem("DefaultResolutionModeMenuListItemText"_tr);
 		clickableListItem2->setClickListener([this](u64 keys) { 
 			if ((keys & HidNpadButton_A) && PluginRunning) {
 				if (_isDocked) res_mode_ptr->docked_res = res_mode_default;
@@ -157,7 +159,7 @@ public:
 		});
 
 		list->addItem(clickableListItem2);
-		
+
 		for (uint32_t i = 1; i < res_mode_amount; i++) {
 			char Hz[] = "1920x1080";
 			snprintf(Hz, sizeof(Hz), "%dx%d", resolutions[i].first, resolutions[i].second);
@@ -199,30 +201,26 @@ public:
 	virtual tsl::elm::Element* createUI() override {
 		// A OverlayFrame is the base element every overlay consists of. This will draw the default Title and Subtitle.
 		// If you need more information in the header or want to change it's look, use a HeaderOverlayFrame.
-		auto frame = new tsl::elm::OverlayFrame("ReverseNX-RT", APP_VERSION);
+		auto frame = new tsl::elm::OverlayFrame("PluginName"_tr, APP_VERSION);
 
 		// A list that can contain sub elements and handles scrolling
 		auto list = new tsl::elm::List();
 		
 		list->addItem(new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
 			if (!SaltySD) {
-				renderer->drawString("SaltyNX is not working!", false, x, y+50, 20, renderer->a(0xF33F));
-			}
-			else if (!check) {
+				renderer->drawString("SaltySDNotRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+50, 20, renderer->a(0xF33F));
+			} else if (!check) {
 				if (closed) {
-					renderer->drawString("Game was closed! Overlay disabled!", false, x, y+20, 19, renderer->a(0xF33F));
+					renderer->drawString("CheckGameClosedGuiTestCustomDrawerText"_tr.c_str(), false, x, y+20, 19, renderer->a(0xF33F));
+				} else {
+					renderer->drawString("CheckNoGameRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+20, 19, renderer->a(0xF33F));
 				}
-				else {
-					renderer->drawString("Game is not running! Overlay disabled!", false, x, y+20, 19, renderer->a(0xF33F));
-				}
-			}
-			else if (!PluginRunning) {
-				renderer->drawString("Game is running.", false, x, y+20, 20, renderer->a(0xFFFF));
-				renderer->drawString("ReverseNX-RT is not running!", false, x, y+40, 20, renderer->a(0xF33F));
-			}
-			else {
-				renderer->drawString("ReverseNX-RT is running.", false, x, y+20, 20, renderer->a(0xFFFF));
-				if (!*pluginActive) renderer->drawString("Game didn't check any mode!", false, x, y+40, 18, renderer->a(0xF33F));
+			} else if (!PluginRunning) {
+				renderer->drawString("GameRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+20, 20, renderer->a(0xFFFF));
+				renderer->drawString("PlugNotRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+40, 20, renderer->a(0xF33F));
+			} else {
+				renderer->drawString("PlugRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+20, 20, renderer->a(0xFFFF));
+				if (!*pluginActive) renderer->drawString("GameNotCheckAnyModeGuiTestCustomDrawerText"_tr.c_str(), false, x, y+40, 18, renderer->a(0xF33F));
 				else {
 					renderer->drawString(SystemChar, false, x, y+42, 20, renderer->a(0xFFFF));
 					renderer->drawString(DockedChar, false, x, y+64, 20, renderer->a(0xFFFF));
@@ -232,18 +230,17 @@ public:
 							renderer->drawString(DockedDDR, false, x, y+108, 20, renderer->a(0xFFFF));
 						}
 						else {
-							renderer->drawString("Default Display Resolution", false, x, y+86, 20, renderer->a(0xFFFF));
-							renderer->drawString("was not checked!", false, x, y+108, 20, renderer->a(0xFFFF));							
+							renderer->drawString("DefaultDisplayResolutionGuiTestCustomDrawerText"_tr.c_str(), false, x, y+86, 20, renderer->a(0xFFFF));
+							renderer->drawString("WasNotCheckedGuiTestCustomDrawerText"_tr.c_str(), false, x, y+108, 20, renderer->a(0xFFFF));							
 						}
 					}
 				}
 				renderer->drawString(saveChar, false, x, y+130, 20, renderer->a(0xFFFF));
 			}
-	}), 150);
+		}), 150);
 
 		if (PluginRunning && *pluginActive) {
-
-			auto *clickableListItem = new tsl::elm::ListItem("Change system control");
+			auto *clickableListItem = new tsl::elm::ListItem("ChangeSystemControlGuiTestListItemText"_tr);
 			clickableListItem->setClickListener([](u64 keys) { 
 				if ((keys & HidNpadButton_A) && PluginRunning) {
 					*def = !*def;
@@ -258,11 +255,11 @@ public:
 			list->addItem(clickableListItem);
 
 			if (!*def) {
-
-				auto *clickableListItem2 = new tsl::elm::ListItem("Change mode");
+				auto *clickableListItem2 = new tsl::elm::ListItem("ChangeModeGuiTestListItemText"_tr);
 				clickableListItem2->setClickListener([](u64 keys) { 
-					if ((keys & HidNpadButton_A) && PluginRunning) {
-						*isDocked = !*isDocked;
+					if ((keys & HidNpadButton_A) && PluginRunning && !_def) {
+						_isDocked = !_isDocked;
+						*isDocked = _isDocked;
 						return true;
 					}
 					
@@ -271,39 +268,39 @@ public:
 				list->addItem(clickableListItem2);
 
 				if (*_wasDDRused) {
-					auto *clickableListItem3 = new tsl::elm::ListItem("Change Handheld DDR");
+					auto *clickableListItem3 = new tsl::elm::ListItem("ChangeHandheldDDRGuiTestListItemText"_tr);
 					clickableListItem3->setClickListener([](u64 keys) { 
 						if ((keys & HidNpadButton_A) && PluginRunning) {
 							tsl::changeTo<ResolutionModeMenu>(false);
 							return true;
 						}
-						
+
 						return false;
 					});
 					list->addItem(clickableListItem3);
 
-					auto *clickableListItem4 = new tsl::elm::ListItem("Change Docked DDR");
+					auto *clickableListItem4 = new tsl::elm::ListItem("ChangeDockedDDRGuiTestListItemText"_tr);
 					clickableListItem4->setClickListener([](u64 keys) { 
 						if ((keys & HidNpadButton_A) && PluginRunning) {
 							tsl::changeTo<ResolutionModeMenu>(true);
 							return true;
 						}
-						
+
 						return false;
 					});
 					list->addItem(clickableListItem4);
 				}
 			}
 
-			auto *clickableListItem3 = new tsl::elm::ListItem("Save current settings");
+			auto *clickableListItem3 = new tsl::elm::ListItem("SaveSettingsGuiTestListItemText"_tr);
 			clickableListItem3->setClickListener([](u64 keys) { 
 				if ((keys & HidNpadButton_A) && PluginRunning) {
 					if (writeSave())
-						snprintf(saveChar, sizeof(saveChar), "Settings saved successfully!");
-					else snprintf(saveChar, sizeof(saveChar), "Saving settings failed!");
+						snprintf(saveChar, sizeof(saveChar), "SettingSavedSuccessGuiTestCustomDrawerText"_tr.c_str());
+					else snprintf(saveChar, sizeof(saveChar), "SettingSavedFailGuiTestCustomDrawerText"_tr.c_str());
 					return true;
 				}
-				
+
 				return false;
 			});
 			list->addItem(clickableListItem3);
@@ -318,7 +315,7 @@ public:
 
 	// Called once every frame to update values
 	virtual void update() override {
-		static uint8_t i = 10;
+		static uint8_t i = 0;
 		Result rc = pmdmntGetApplicationProcessId(&PID);
 		if (R_FAILED(rc) && PluginRunning) {
 			PluginRunning = false;
@@ -326,32 +323,33 @@ public:
 			closed = true;
 		}
 
+		i++;
 		if (PluginRunning) {
-			if (i > 9) {
+			if (i % 20 == 0) {
 				_def = *def;
 				_isDocked = *isDocked;
-				i = 0;
-				
-				if (_def) sprintf(SystemChar, "Controlled by system: Yes");
-				else sprintf(SystemChar, "Controlled by system: No");
+
+				if (_def) sprintf(SystemChar, "UpdateSystemControlGuiTestListItemText"_tr.c_str());
+				else sprintf(SystemChar, "UpdateNotSystemControlGuiTestListItemText"_tr.c_str());
 
 				if (_def) {
-					if (_isDocked) sprintf(DockedChar, "Mode: Docked");
-					else sprintf(DockedChar, "Mode: Handheld");
+					if (_isDocked) sprintf(DockedChar, "UpdateDockModeGuiTestListItemText"_tr.c_str());
+					else sprintf(DockedChar, "UpdateHandleModeGuiTestListItemText"_tr.c_str());
 				}
 				else {
-					if (_isDocked) sprintf(DockedChar, "Mode: Fake Docked");
-					else sprintf(DockedChar, "Mode: Fake Handheld");
+					if (_isDocked) sprintf(DockedChar, "UpdateFakeDockedModeGuiTestListItemText"_tr.c_str());
+					else sprintf(DockedChar, "UpdateFakeHandleModeGuiTestListItemText"_tr.c_str());
 				}
 
-				if (!res_mode_ptr->handheld_res) strcpy(HandheldDDR, "Handheld DDR: Default");
-				else snprintf(HandheldDDR, sizeof(HandheldDDR), "Handheld DDR: %dx%d", resolutions[res_mode_ptr->handheld_res].first, resolutions[res_mode_ptr->handheld_res].second);
-				if (!res_mode_ptr->docked_res) strcpy(DockedDDR, "Docked DDR: Default");
-				else snprintf(DockedDDR, sizeof(DockedDDR), "Docked DDR: %dx%d", resolutions[res_mode_ptr->docked_res].first, resolutions[res_mode_ptr->docked_res].second);
+				if (!res_mode_ptr->handheld_res) strcpy(HandheldDDR, "UpdateDefaultHandleDDRGuiTestListItemText"_tr.c_str());
+				else snprintf(HandheldDDR, sizeof(HandheldDDR), "UpdateHandleDDRGuiTestListItemText"_tr.c_str(), resolutions[res_mode_ptr->handheld_res].first, resolutions[res_mode_ptr->handheld_res].second);
+				if (!res_mode_ptr->docked_res) strcpy(DockedDDR, "UpdateDefaultDockedDDRGuiTestListItemText"_tr.c_str());
+				else snprintf(DockedDDR, sizeof(DockedDDR), "UpdateDockedDDRGuiTestListItemText"_tr.c_str(), resolutions[res_mode_ptr->docked_res].first, resolutions[res_mode_ptr->docked_res].second);
 			}
-			else i++;
 		}
-	
+
+		if (i % 20 == 0)
+			i = 0;
 	}
 
 	// Called once every frame to handle inputs not handled by other UI elements
@@ -372,7 +370,7 @@ public:
 	// Called when this Gui gets loaded to create the UI
 	// Allocate all elements on the heap. libtesla will make sure to clean them up when not needed anymore
 	virtual tsl::elm::Element* createUI() override {
-		auto frame = new tsl::elm::OverlayFrame("ReverseNX-RT", APP_VERSION);
+		auto frame = new tsl::elm::OverlayFrame("PluginName"_tr, APP_VERSION);
 		return frame;
 	}
 
@@ -387,16 +385,53 @@ class OverlayTest : public tsl::Overlay {
 public:
 	// libtesla already initialized fs, hid, pl, pmdmnt, hid:sys and set:sys
 	virtual void initServices() override {
+		std::string jsonStr = R"(
+			{
+				"PluginName": "ReverseNx-RT",
+				"ChangeDockedDefaultDisplayResolutioResolutionModeMenuOverlayFrameText": "Change Docked Default Display Resolution",
+				"ChangeHandheldDefaultDisplayResolutioResolutionModeMenuOverlayFrameText": "Change Handheld Default Display Resolution",
+				"DefaultResolutionModeMenuListItemText": "Default",
+				"SaltySDNotRunningGuiTestCustomDrawerText": "SaltyNX is not working!",
+				"CheckGameClosedGuiTestCustomDrawerText": "Game was closed! Overlay disabled!",
+				"CheckNoGameRunningGuiTestCustomDrawerText": "Game is not running! Overlay disabled!",
+				"GameRunningGuiTestCustomDrawerText": "Game is running.",
+				"PlugNotRunningGuiTestCustomDrawerText": "ReverseNX-RT is not running!",
+				"PlugRunningGuiTestCustomDrawerText": "ReverseNX-RT is running.",
+				"GameNotCheckAnyModeGuiTestCustomDrawerText": "Game didn't check any mode!",
+				"DefaultDisplayResolutionGuiTestCustomDrawerText": "Default Display Resolution",
+				"WasNotCheckedGuiTestCustomDrawerText": "was not checked!",
+				"ChangeSystemControlGuiTestListItemText": "Change system control",
+				"ChangeModeGuiTestListItemText": "Change mode",
+				"ChangeHandheldDDRGuiTestListItemText": "Change Handheld DDR",
+				"ChangeDockedDDRGuiTestListItemText": "Change Docked DDR",
+				"SaveSettingsGuiTestListItemText": "Save current settings",
+				"SettingSavedSuccessGuiTestCustomDrawerText": "Settings saved successfully!",
+				"SettingSavedFailGuiTestCustomDrawerText": "Saving settings failed!",
+				"UpdateSystemControlGuiTestListItemText": "Controlled by system: Yes",
+				"UpdateNotSystemControlGuiTestListItemText": "Controlled by system: No",
+				"UpdateDockModeGuiTestListItemText": "Mode: Docked",
+				"UpdateHandleModeGuiTestListItemText": "Mode: Handheld",
+				"UpdateFakeDockedModeGuiTestListItemText": "Mode: Fake Docked",
+				"UpdateFakeHandleModeGuiTestListItemText": "Mode: Fake Handheld",
+				"UpdateDefaultHandleDDRGuiTestListItemText": "Handheld DDR: Default",
+				"UpdateHandleDDRGuiTestListItemText": "Handheld DDR: %dx%d",
+				"UpdateDefaultDockedDDRGuiTestListItemText": "Docked DDR: Default",
+				"UpdateDockedDDRGuiTestListItemText": "Docked DDR: %dx%d"
+			}
+		)";
+		std::string lanPath = std::string("sdmc:/switch/.overlays/lang/") + APPTITLE + "/";
+		fsdevMountSdmc();
+		tsl::hlp::doWithSmSession([&lanPath, &jsonStr]{
+			tsl::tr::InitTrans(lanPath, jsonStr);
+		});
 
-		tsl::hlp::doWithSmSession([]{
-			
-			fsdevMountSdmc();
+		tsl::hlp::doWithSmSession([] {
 			SaltySD = CheckPort();
 			if (!SaltySD) return;
 
 			if (R_FAILED(pmdmntGetApplicationProcessId(&PID))) return;
 			check = true;
-			
+
 			if(!LoadSharedMemory()) return;
 
 			if (!PluginRunning) {
@@ -409,9 +444,8 @@ public:
 					res_mode_ptr = (resolutionMode*)(base + rel_offset + 7);
 					_wasDDRused = (bool*)(base + rel_offset + 8);
 					PluginRunning = true;
-				}		
+				}
 			}
-		
 		});
 	
 	}  // Called at the start to initialize all services necessary for this Overlay

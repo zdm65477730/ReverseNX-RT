@@ -37,14 +37,18 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   of a homebrew executable (.nro). This is intended to be used for sysmodules.
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
-APP_TITLE	:=	ReverseNX-RT
-APP_VERSION	:=	2.2.0
+APP_TITLE	?=	ReverseNX-RT
+APP_VERSION	:=	v2.2.0
 
-TARGET		:=	ReverseNX-RT-ovl
+ifeq ($(RELEASE),)
+	APP_VERSION	:=	$(APP_VERSION)-$(shell git describe --always)
+endif
+
+TARGET		:=	$(APP_TITLE)
 BUILD		:=	build
-SOURCES		:=	source libs/Atmosphere-libs/libstratosphere/source/dmnt
+SOURCES		:=	source ../libs/Atmosphere-libs/libstratosphere/source/dmnt
 DATA		:=	data
-INCLUDES	:=	include libs/libtesla/include libs/Atmosphere-libs/libstratosphere/source/dmnt libs/Atmosphere-libs/libstratosphere/source
+INCLUDES	:=	include ../libs/libtesla/include ../libs/Atmosphere-libs/libstratosphere/source/dmnt ../libs/Atmosphere-libs/libstratosphere/source
 
 NO_ICON		:=  1
 
@@ -56,9 +60,9 @@ ARCH		:= -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS		:= -g -Wall -Os -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS		+= $(INCLUDE) -D__SWITCH__ -DAPP_VERSION="\"$(APP_VERSION)\""
+CFLAGS		+= $(INCLUDE) -D__SWITCH__ -DAPPTITLE=\"$(APP_TITLE)\" -DAPP_VERSION="\"$(APP_VERSION)\""
 
-CXXFLAGS	:= $(CFLAGS) -fno-exceptions -std=c++20
+CXXFLAGS	:= $(CFLAGS) -fexceptions -std=c++20
 
 ASFLAGS		:= -g $(ARCH)
 LDFLAGS		= -specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
