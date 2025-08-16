@@ -209,16 +209,20 @@ public:
 		list->addItem(new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
 			if (!SaltySD) {
 				renderer->drawString("SaltySDNotRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+50, 20, renderer->a(0xF33F));
-			} else if (!check) {
+			}
+			else if (!check) {
 				if (closed) {
 					renderer->drawString("CheckGameClosedGuiTestCustomDrawerText"_tr.c_str(), false, x, y+20, 19, renderer->a(0xF33F));
-				} else {
+				}
+				else {
 					renderer->drawString("CheckNoGameRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+20, 19, renderer->a(0xF33F));
 				}
-			} else if (!PluginRunning) {
+			}
+			else if (!PluginRunning) {
 				renderer->drawString("GameRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+20, 20, renderer->a(0xFFFF));
 				renderer->drawString("PlugNotRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+40, 20, renderer->a(0xF33F));
-			} else {
+			}
+			else {
 				renderer->drawString("PlugRunningGuiTestCustomDrawerText"_tr.c_str(), false, x, y+20, 20, renderer->a(0xFFFF));
 				if (!*pluginActive) renderer->drawString("GameNotCheckAnyModeGuiTestCustomDrawerText"_tr.c_str(), false, x, y+40, 18, renderer->a(0xF33F));
 				else {
@@ -257,9 +261,8 @@ public:
 			if (!*def) {
 				auto *clickableListItem2 = new tsl::elm::ListItem("ChangeModeGuiTestListItemText"_tr);
 				clickableListItem2->setClickListener([](u64 keys) { 
-					if ((keys & HidNpadButton_A) && PluginRunning && !_def) {
-						_isDocked = !_isDocked;
-						*isDocked = _isDocked;
+					if ((keys & HidNpadButton_A) && PluginRunning) {
+						*isDocked = !*isDocked;
 						return true;
 					}
 					
@@ -315,7 +318,7 @@ public:
 
 	// Called once every frame to update values
 	virtual void update() override {
-		static uint8_t i = 0;
+		static uint8_t i = 10;
 		Result rc = pmdmntGetApplicationProcessId(&PID);
 		if (R_FAILED(rc) && PluginRunning) {
 			PluginRunning = false;
@@ -323,11 +326,11 @@ public:
 			closed = true;
 		}
 
-		i++;
 		if (PluginRunning) {
-			if (i % 20 == 0) {
+			if (i > 9) {
 				_def = *def;
 				_isDocked = *isDocked;
+				i = 0;
 
 				if (_def) sprintf(SystemChar, "UpdateSystemControlGuiTestListItemText"_tr.c_str());
 				else sprintf(SystemChar, "UpdateNotSystemControlGuiTestListItemText"_tr.c_str());
@@ -346,10 +349,8 @@ public:
 				if (!res_mode_ptr->docked_res) strcpy(DockedDDR, "UpdateDefaultDockedDDRGuiTestListItemText"_tr.c_str());
 				else snprintf(DockedDDR, sizeof(DockedDDR), "UpdateDockedDDRGuiTestListItemText"_tr.c_str(), resolutions[res_mode_ptr->docked_res].first, resolutions[res_mode_ptr->docked_res].second);
 			}
+			else i++;
 		}
-
-		if (i % 20 == 0)
-			i = 0;
 	}
 
 	// Called once every frame to handle inputs not handled by other UI elements
