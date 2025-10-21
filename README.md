@@ -4,12 +4,6 @@ Alternative version of ReverseNX that can switch between handheld and docked mod
 
 Requires SaltyNX 1.4.3+ and Tesla environment installed. Links at the end of readme.
 
-It's compatible with ReverseNX patches/ReverseNX-Tool 2.0.0+.
-
-It's not compatible with deprecated ReverseNX plugin.
-
-**Do not use ReverseNX-RT next to Status Monitor 0.6.0 or older** (Tesla can crash on Atmosphere if you are using NX-FPS)
-
 I'm not planning to add any more functionality to it. Next updates will only contain bug fixes.
 
 Overlay contains multiple modes, from which 2 are main ones, other are error notifications.
@@ -24,8 +18,12 @@ Overlay contains multiple modes, from which 2 are main ones, other are error not
 You have only two options here:
 * Change system control (It also refers to ReverseNX-Tool flags - f.e. if you have docked flag set for this game in ReverseNX-Tool, when system control is enabled, it will force docked mode)
 * Change mode (doesn't show up if system control is enabled)
+
+Additional options if it's detected that they can be compatible:
 * Change Handheld DDR (doesn't show up if system control is enabled and if game didn't use GetDefaultDisplayResolution even once)
 * Change Docked DDR (doesn't show up if system control is enabled and if game didn't use GetDefaultDisplayResolution even once)
+
+And:
 * Save settings
 
 > DDR
