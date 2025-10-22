@@ -12,7 +12,7 @@ all:
 	@mkdir -p SdOut/SaltySD/plugins/FPSLocker/patches/
 	@mkdir -p SdOut/switch/.overlays/lang/$(APP_TITLE)
 	@mkdir -p SdOut/switch/.overlays/lang/FPSLocker
-	@wget $(shell curl -s https://api.github.com/repos/masagrator/SaltyNX/releases/latest|grep 'browser_'|cut -d\" -f4) -O $(CURDIR)/SdOut/SaltyNX-latest.zip
+	@wget $(shell curl -s https://api.github.com/repos/masagrator/SaltyNX/releases/latest | grep 'browser_download_url' | grep 'SaltyNX.zip'|cut -d\" -f4) -O $(CURDIR)/SdOut/SaltyNX-latest.zip
 	@unzip $(CURDIR)/SdOut/SaltyNX-latest.zip -d $(CURDIR)/SdOut/
 	@cp -f Overlays/$(APP_TITLE)/$(APP_TITLE).ovl SdOut/switch/.overlays/$(APP_TITLE).ovl
 	@cp -f Overlays/FPSLocker/FPSLocker.ovl SdOut/switch/.overlays/FPSLocker.ovl
