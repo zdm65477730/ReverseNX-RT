@@ -30,7 +30,7 @@ jobs:
           submodules: recursive
       - name: Setup ENV parameters
         run: |
-          VER_FILE=Makefile
+          VER_FILE=Overlays/ReverseNX-RT/Makefile
           NAME=$(awk '/^APP_TITLE/{print $3}' $VER_FILE)
           VERSION=$(awk '/^APP_VERSION/{print $3}' $VER_FILE)
           echo "TAG=${VERSION}" >> "${GITHUB_ENV}"
