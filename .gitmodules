@@ -4,9 +4,9 @@
 [submodule "Overlays/FPSLocker"]
 	path = Overlays/FPSLocker
 	url = https://github.com/zdm65477730/FPSLocker
-[submodule "Plugins/FPSLocker-Warehouse"]
-	path = Plugins/FPSLocker-Warehouse
-	url = https://github.com/zdm65477730/FPSLocker-Warehouse
 [submodule "Overlays/libs/Atmosphere-libs"]
 	path = Overlays/libs/Atmosphere-libs
 	url = https://github.com/Atmosphere-NX/Atmosphere-libs.git
+[submodule "Plugins/FPSLocker-Warehouse"]
+	path = Plugins/FPSLocker-Warehouse
+	url = https://github.com/masagrator/FPSLocker-Warehouse
